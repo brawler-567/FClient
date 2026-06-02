@@ -25,7 +25,48 @@
   --white:     #ffffff;
   --radius:    18px;
   --radius-sm: 10px;
+  --cyan-glow: 0 0 22px rgba(0,212,255,.5);
+  --cyan-glow-lg: 0 0 32px rgba(0,212,255,.5);
 }
+
+/* ─── SHARED UTILITIES ───────────────────────────── */
+.syne       { font-family: 'Syne', sans-serif; }
+.brand-f    { color: var(--cyan); }
+.z-above    { position: relative; z-index: 2; }
+
+/* Badge — shared by hero badge & section labels */
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.25);
+  color: var(--cyan); padding: 5px 15px; border-radius: 30px;
+  font-size: .72rem; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase;
+}
+
+/* Card surface — shared base for feat-card & dl-platform */
+.card-surface {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color .3s, box-shadow .3s, transform .3s;
+}
+.card-surface:hover {
+  border-color: rgba(0,212,255,.4);
+  box-shadow: 0 16px 50px rgba(0,0,0,.3), 0 0 35px rgba(0,212,255,.08);
+  transform: translateY(-3px);
+}
+
+/* Scroll-reveal animation — unified entry for all revealed elements */
+.sr {
+  opacity: 0;
+  transform: var(--sr-from, translateY(32px));
+  transition: opacity .7s ease, transform .7s ease;
+}
+.sr.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.sr-delay-1 { transition-delay: .1s; }
+.sr-delay-2 { transition-delay: .2s; }
+.sr-delay-3 { transition-delay: .3s; }
 html { scroll-behavior: smooth; }
 body {
   font-family: 'DM Sans', sans-serif;
@@ -62,12 +103,10 @@ nav {
   transition: padding .3s;
 }
 .nav-logo {
-  font-family: 'Syne', sans-serif;
   font-weight: 800; font-size: 1.4rem;
   display: flex; align-items: center; gap: 10px;
   letter-spacing: -.5px;
 }
-.nav-logo span.f { color: var(--cyan); }
 .nav-logo span.c { color: var(--white); }
 .nav-links { display: flex; gap: 32px; align-items: center; }
 .nav-links a {
@@ -81,7 +120,7 @@ nav {
   font-weight: 700; font-size: .85rem; letter-spacing: .3px;
   transition: box-shadow .25s, transform .2s;
 }
-.nav-btn:hover { box-shadow: 0 0 22px rgba(0,212,255,.5); transform: translateY(-1px); }
+.nav-btn:hover { box-shadow: var(--cyan-glow); transform: translateY(-1px); }
 
 /* ─── HERO ───────────────────────────────────────── */
 .hero {
@@ -105,16 +144,8 @@ nav {
   display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
   align-items: center; max-width: 1200px; margin: 0 auto; width: 100%;
 }
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.25);
-  color: var(--cyan); padding: 5px 14px; border-radius: 30px;
-  font-size: .75rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
-  margin-bottom: 24px;
-}
-.hero-badge svg { width: 8px; height: 8px; fill: var(--cyan); }
+.hero-badge { margin-bottom: 24px; }
 h1 {
-  font-family: 'Syne', sans-serif;
   font-size: clamp(2.8rem, 6vw, 5rem);
   font-weight: 800; line-height: 1.05;
   letter-spacing: -2px; margin-bottom: 22px;
@@ -144,7 +175,7 @@ h1 .accent-orange { color: var(--orange); }
   transition: box-shadow .25s, transform .2s;
   cursor: pointer; border: none;
 }
-.btn-primary:hover { box-shadow: 0 0 32px rgba(0,212,255,.5); transform: translateY(-2px); }
+.btn-primary:hover { box-shadow: var(--cyan-glow-lg); transform: translateY(-2px); }
 .btn-secondary {
   display: inline-flex; align-items: center; gap: 10px;
   background: transparent; color: var(--text);
@@ -178,15 +209,8 @@ h1 .accent-orange { color: var(--orange); }
 /* ─── SECTION SHARED ─────────────────────────────── */
 section { position: relative; }
 .section-wrap { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
-.section-label {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.2);
-  color: var(--cyan); padding: 5px 16px; border-radius: 30px;
-  font-size: .7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 20px;
-}
+.section-label { margin-bottom: 20px; }
 .section-title {
-  font-family: 'Syne', sans-serif;
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 800; color: var(--white);
   letter-spacing: -1px; line-height: 1.1;
@@ -209,23 +233,10 @@ section { position: relative; }
   gap: 24px;
 }
 .feat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  --sr-from: translateY(40px);
   padding: 36px 32px;
   position: relative; overflow: hidden;
-  transition: border-color .3s, box-shadow .3s, transform .3s;
   cursor: default;
-  /* scroll reveal */
-  opacity: 0; transform: translateY(40px);
-}
-.feat-card.visible {
-  animation: revealCard .6s ease forwards;
-}
-.feat-card:nth-child(2).visible { animation-delay: .12s; }
-.feat-card:nth-child(3).visible { animation-delay: .24s; }
-@keyframes revealCard {
-  to { opacity: 1; transform: translateY(0); }
 }
 .feat-card::before {
   content: '';
@@ -233,7 +244,6 @@ section { position: relative; }
   background: linear-gradient(135deg, rgba(0,212,255,.05) 0%, transparent 60%);
   opacity: 0; transition: opacity .3s;
 }
-.feat-card:hover { border-color: rgba(0,212,255,.35); box-shadow: 0 20px 60px rgba(0,0,0,.3), 0 0 40px rgba(0,212,255,.06); transform: translateY(-4px); }
 .feat-card:hover::before { opacity: 1; }
 .card-icon {
   width: 52px; height: 52px;
@@ -246,13 +256,11 @@ section { position: relative; }
 .card-icon svg { width: 26px; height: 26px; }
 .card-number {
   position: absolute; top: 24px; right: 28px;
-  font-family: 'Syne', sans-serif;
   font-size: 3.5rem; font-weight: 800;
   color: rgba(255,255,255,.04); line-height: 1;
   user-select: none;
 }
 .card-title {
-  font-family: 'Syne', sans-serif;
   font-size: 1.2rem; font-weight: 700;
   color: var(--white); margin-bottom: 10px; letter-spacing: -.3px;
 }
@@ -294,13 +302,10 @@ section { position: relative; }
   margin: 56px 0; position: relative; z-index: 2;
 }
 .step-item {
+  --sr-from: translateY(30px);
   flex: 1; max-width: 240px; padding: 0 24px; text-align: center;
   position: relative;
-  opacity: 0; transform: translateY(30px);
 }
-.step-item.visible { animation: revealCard .5s ease forwards; }
-.step-item:nth-child(2).visible { animation-delay: .1s; }
-.step-item:nth-child(3).visible { animation-delay: .2s; }
 .step-item + .step-item::before {
   content: '';
   position: absolute; top: 22px; left: 0;
@@ -310,12 +315,12 @@ section { position: relative; }
 .step-num {
   width: 44px; height: 44px; border-radius: 50%;
   border: 2px solid var(--cyan); color: var(--cyan);
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem;
+  font-weight: 700; font-size: .95rem;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 16px;
   background: rgba(0,212,255,.08);
 }
-.step-title { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--white); margin-bottom: 8px; font-size: 1rem; }
+.step-title { font-weight: 700; color: var(--white); margin-bottom: 8px; font-size: 1rem; }
 .step-text { font-size: .85rem; color: var(--text-muted); font-weight: 300; }
 
 .dl-platform-wrap {
@@ -324,19 +329,14 @@ section { position: relative; }
   margin-top: 48px;
 }
 .dl-platform {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 22px 36px;
+  --sr-from: scale(.96);
+  padding: 22px 36px;
   display: flex; align-items: center; gap: 16px;
-  transition: border-color .25s, box-shadow .25s, transform .2s;
   cursor: pointer; min-width: 240px;
-  opacity: 0; transform: scale(.96);
 }
-.dl-platform.visible { animation: revealPlatform .5s .3s ease forwards; }
-@keyframes revealPlatform { to { opacity: 1; transform: scale(1); } }
-.dl-platform:hover { border-color: rgba(0,212,255,.45); box-shadow: 0 12px 40px rgba(0,0,0,.3), 0 0 30px rgba(0,212,255,.1); transform: translateY(-3px); }
 .dl-platform svg { width: 36px; height: 36px; flex-shrink: 0; }
 .dl-info { text-align: left; }
-.dl-os { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--white); font-size: 1.05rem; }
+.dl-os { font-weight: 700; color: var(--white); font-size: 1.05rem; }
 .dl-size { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
 .dl-get {
   margin-left: auto;
@@ -345,7 +345,7 @@ section { position: relative; }
   font-weight: 700; font-size: .82rem;
   transition: box-shadow .2s;
 }
-.dl-platform:hover .dl-get { box-shadow: 0 0 18px rgba(0,212,255,.5); }
+.dl-platform:hover .dl-get { box-shadow: var(--cyan-glow); }
 
 /* ─── FOOTER ─────────────────────────────────────── */
 footer {
@@ -355,22 +355,15 @@ footer {
   flex-wrap: wrap; gap: 16px;
 }
 .footer-logo {
-  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+  font-weight: 800; font-size: 1.1rem;
 }
-.footer-logo span.f { color: var(--cyan); }
 .footer-note { font-size: .8rem; color: var(--text-muted); }
 .footer-links { display: flex; gap: 24px; }
 .footer-links a { font-size: .82rem; color: var(--text-muted); transition: color .2s; }
 .footer-links a:hover { color: var(--cyan); }
 
-/* ─── SCROLL REVEAL (default state) ─────────────── */
-.reveal {
-  opacity: 0; transform: translateY(32px);
-  transition: opacity .7s ease, transform .7s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: .1s; }
-.reveal-delay-2 { transition-delay: .2s; }
+/* Legacy reveal aliases (mapped to .sr utility) */
+/* All scroll-reveal logic now uses the unified .sr system above */
 
 /* ─── HERO ENTRANCE ──────────────────────────────── */
 .hero-left > * {
@@ -422,13 +415,13 @@ footer {
 
 <!-- ─── NAV ─────────────────────────── -->
 <nav>
-  <div class="nav-logo">
+  <div class="nav-logo syne">
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="28" height="28" rx="8" fill="rgba(0,212,255,0.15)"/>
       <path d="M7 9h14M7 14h8M7 19h11" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round"/>
       <circle cx="21" cy="19" r="3" fill="#00d4ff"/>
     </svg>
-    <span class="f">F</span><span class="c">Client</span>
+    <span class="brand-f">F</span><span class="c">Client</span>
   </div>
   <div class="nav-links">
     <a href="#features">Features</a>
@@ -444,11 +437,11 @@ footer {
   <div class="glow-blob hero-blob2"></div>
   <div class="hero-inner">
     <div class="hero-left">
-      <div class="hero-badge">
+      <div class="hero-badge badge">
         <span class="pulse-dot"></span>
         DDNet Enhanced Experience
       </div>
-      <h1>
+      <h1 class="syne">
         <span class="accent-cyan">F</span>Client<br/>
         for <span class="accent-orange">DDNet</span>
       </h1>
@@ -530,16 +523,16 @@ footer {
 <!-- ─── FEATURES ──────────────────────── -->
 <section class="features" id="features">
   <div class="section-wrap">
-    <div class="features-header reveal">
-      <div class="section-label">Features</div>
-      <h2 class="section-title">What's inside FClient</h2>
+    <div class="features-header sr">
+      <div class="section-label badge">Features</div>
+      <h2 class="section-title syne">What's inside FClient</h2>
       <p class="section-sub">Everything you need for a better DDNet experience, carefully crafted and optimized.</p>
     </div>
     <div class="cards-grid">
 
       <!-- Card 1: Tclient 10.8.7 -->
-      <div class="feat-card">
-        <div class="card-number">01</div>
+      <div class="feat-card card-surface sr">
+        <div class="card-number syne">01</div>
         <div class="card-icon">
           <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="3" y="5" width="20" height="16" rx="3" stroke="#00d4ff" stroke-width="1.8"/>
@@ -548,7 +541,7 @@ footer {
             <line x1="7" y1="17" x2="12" y2="17" stroke="#00d4ff" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
         </div>
-        <div class="card-title">TClient 10.8.7</div>
+        <div class="card-title syne">TClient 10.8.7</div>
         <div class="card-text">TClient version 10.8.7 — the reliable, feature-rich DDNet client base, bringing all its core functionality and tools.</div>
         <!-- Mini SVG illustration -->
         <div class="card-img-wrap">
@@ -566,8 +559,8 @@ footer {
       </div>
 
       <!-- Card 2: Fast Input -->
-      <div class="feat-card">
-        <div class="card-number">02</div>
+      <div class="feat-card card-surface sr sr-delay-1">
+        <div class="card-number syne">02</div>
         <div class="card-icon">
           <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5 13h10M11 8l5 5-5 5" stroke="#00d4ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -575,7 +568,7 @@ footer {
             <path d="M3 7l2 1M3 19l2-1" stroke="#00d4ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
           </svg>
         </div>
-        <div class="card-title">Fast Input</div>
+        <div class="card-title syne">Fast Input</div>
         <div class="card-text">TClient with Improved Fast Input — featuring a precise float-tick system via integer millitick storage for minimal latency.</div>
         <div class="card-img-wrap">
           <svg viewBox="0 0 180 90" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -595,15 +588,15 @@ footer {
       </div>
 
       <!-- Card 3: Easy to use -->
-      <div class="feat-card">
-        <div class="card-number">03</div>
+      <div class="feat-card card-surface sr sr-delay-2">
+        <div class="card-number syne">03</div>
         <div class="card-icon">
           <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="13" cy="13" r="9" stroke="#00d4ff" stroke-width="1.8"/>
             <path d="M10 13l2 2 4-4" stroke="#00d4ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <div class="card-title">Easy to use</div>
+        <div class="card-title syne">Easy to use</div>
         <div class="card-text">Just download, extract and launch. No complex setup — designed to work right out of the box for every DDNet player.</div>
         <div class="card-img-wrap">
           <!-- Easy-to-use illustration: 3 step icons -->
@@ -648,32 +641,32 @@ footer {
       <div class="glow-blob dl-blob1"></div>
       <div class="glow-blob dl-blob2"></div>
 
-      <div class="section-label reveal" style="position:relative;z-index:2;display:inline-flex;">Installation</div>
-      <h2 class="section-title reveal" style="position:relative;z-index:2;">Three quick steps to jump in.</h2>
+      <div class="section-label badge sr z-above" style="display:inline-flex;">Installation</div>
+      <h2 class="section-title syne sr z-above">Three quick steps to jump in.</h2>
 
       <div class="steps-row">
-        <div class="step-item">
-          <div class="step-num">1</div>
-          <div class="step-title">Download Client</div>
+        <div class="step-item sr">
+          <div class="step-num syne">1</div>
+          <div class="step-title syne">Download Client</div>
           <div class="step-text">Download the latest version for Windows.</div>
         </div>
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <div class="step-title">Extract Files</div>
+        <div class="step-item sr sr-delay-1">
+          <div class="step-num syne">2</div>
+          <div class="step-title syne">Extract Files</div>
           <div class="step-text">Extract the archive to any folder you like.</div>
         </div>
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <div class="step-title">Launch & Play</div>
+        <div class="step-item sr sr-delay-2">
+          <div class="step-num syne">3</div>
+          <div class="step-title syne">Launch & Play</div>
           <div class="step-text">Run DDnet.exe and enjoy the new features!</div>
         </div>
       </div>
 
-      <div class="section-label reveal" style="position:relative;z-index:2;display:inline-flex;margin-top:24px;">Download FClient</div>
-      <h3 class="section-title reveal reveal-delay-1" style="position:relative;z-index:2;font-size:clamp(1.4rem,3vw,2.2rem);margin-bottom:8px;">Choose your platform and start playing today.</h3>
+      <div class="section-label badge sr z-above" style="display:inline-flex;margin-top:24px;">Download FClient</div>
+      <h3 class="section-title syne sr sr-delay-1 z-above" style="font-size:clamp(1.4rem,3vw,2.2rem);margin-bottom:8px;">Choose your platform and start playing today.</h3>
 
       <div class="dl-platform-wrap">
-        <a class="dl-platform" id="win-dl" href="https://github.com/brawler-567/FastInput/releases/download/1.0.9/FClient-win64.rar" download>
+        <a class="dl-platform card-surface sr sr-delay-2" id="win-dl" href="https://github.com/brawler-567/FastInput/releases/download/1.0.9/FClient-win64.rar" download>
           <!-- Windows SVG icon -->
           <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="5" y="5" width="12" height="12" rx="2" fill="#00d4ff" opacity=".9"/>
@@ -682,7 +675,7 @@ footer {
             <rect x="19" y="19" width="12" height="12" rx="2" fill="#00d4ff" opacity=".9"/>
           </svg>
           <div class="dl-info">
-            <div class="dl-os">Windows</div>
+            <div class="dl-os syne">Windows</div>
             <div class="dl-size">~70 MB · .zip</div>
           </div>
           <div class="dl-get">Get</div>
@@ -698,7 +691,7 @@ footer {
 
 <!-- ─── FOOTER ────────────────────────── -->
 <footer>
-  <div class="footer-logo"><span class="f">F</span>Client</div>
+  <div class="footer-logo syne"><span class="brand-f">F</span>Client</div>
   <div class="footer-note">© 2026 FClient. Not affiliated with DDNet.</div>
   <div class="footer-links">
     <a href="https://github.com/brawler-567/FClient" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -717,7 +710,7 @@ window.addEventListener('unhandledrejection', function (event) {
 
 document.addEventListener('DOMContentLoaded', function () {
   /* ─── SCROLL REVEAL ─────────────────── */
-  var revealTargets = document.querySelectorAll('.reveal, .feat-card, .step-item, .dl-platform');
+  var revealTargets = document.querySelectorAll('.sr');
 
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
