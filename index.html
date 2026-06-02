@@ -706,55 +706,17 @@ footer {
   </div>
 </footer>
 
+<script src="src/errorHandler.js"></script>
+<script src="src/scrollReveal.js"></script>
+<script src="src/navShrink.js"></script>
+<script src="src/downloadFeedback.js"></script>
 <script>
-/* ─── GLOBAL ERROR HANDLER ──────────── */
-window.addEventListener('error', function (event) {
-  console.error('[FClient] Uncaught error:', event.message, 'at', event.filename + ':' + event.lineno);
-});
-window.addEventListener('unhandledrejection', function (event) {
-  console.error('[FClient] Unhandled promise rejection:', event.reason);
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-  /* ─── SCROLL REVEAL ─────────────────── */
-  var revealTargets = document.querySelectorAll('.reveal, .feat-card, .step-item, .dl-platform');
-
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.15 });
-
-    revealTargets.forEach(function (el) { io.observe(el); });
-  } else {
-    revealTargets.forEach(function (el) { el.classList.add('visible'); });
-  }
-
-  /* ─── NAVBAR SHRINK ─────────────────── */
-  var nav = document.querySelector('nav');
-  if (nav) {
-    window.addEventListener('scroll', function () {
-      nav.style.padding = window.scrollY > 60 ? '12px 60px' : '18px 60px';
-    }, { passive: true });
-  }
-
-  /* ─── DOWNLOAD ERROR FEEDBACK ─────── */
-  var dlLink = document.getElementById('win-dl');
-  if (dlLink) {
-    dlLink.addEventListener('click', function (event) {
-      var href = dlLink.getAttribute('href');
-      if (!href) {
-        event.preventDefault();
-        console.error('[FClient] Download link has no href');
-        alert('Download link is currently unavailable. Please try again later.');
-      }
-    });
-  }
-});
+  initErrorHandler();
+  document.addEventListener('DOMContentLoaded', function () {
+    initScrollReveal();
+    initNavShrink();
+    initDownloadFeedback();
+  });
 </script>
 </body>
 </html>
